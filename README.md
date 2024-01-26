@@ -7,7 +7,9 @@ To launch this applicatiion you need to install this npms:
 npm install nodemon
 npm install express
 npm install node-fetch
-after u need to add the "dev": "nodemon server.js" and "start": "node server.js" 
+after u need to add the "dev": "nodemon server.js" and "start": "node server.js" to youre package.json file in the script 
+
+
 
 
 After all the interactions in the terminal type:
