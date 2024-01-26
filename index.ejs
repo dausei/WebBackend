@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDwmROyjbtZbyovTFcCXyt8El07KzOoWKQ&callback=initMap" async defer></script>
+    <title>Weather</title>
+    <style>
+        body {
+            background-color: #e9ecef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+        }
+        .main-content {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            margin-bottom: 50px;
+        }
+
+        .weather-container {
+            max-width: 400px;
+        }
+
+        .map-container {
+            width: 600px;
+            height: 600px;
+        }
+
+        #map {
+            height: 360px;
+            width: 100%;
+        }
+        .footer {
+            padding: 20px;
+            text-align: center;
+            background: #343a40; 
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .input-group {
+            margin-bottom: 30px;
+        }
+        .form-control {
+            border-radius: 20px;
+            padding: .375rem .75rem;
+        }
+        .btn-dark {
+            border-radius: 20px;
+        }
+        .weather-info h2 {
+            margin: 10px 0;
+            font-size: 1.5rem;
+            color: #333;
+        }
+        .weather-info img {
+            width: 100px;
+            height: auto;
+        }
+        
+        .coords {
+            font-size: 0.9rem;
+            color: #6c757d; 
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="container weather-container"">
+            <form action="/" method="post" class="text-center">
+                <div class="input-group mb-4">
+                    <input type="text" class="form-control form-control-lg" id="city" name="city" placeholder="Enter City" required>
+                    <button type="submit" class="btn btn-dark btn-lg">Search</button>
+                </div>
+                <% if (typeof weatherData !== 'undefined') { %>
+                    <div class="weather-info text-center">
+                        <h2><%= weatherData.name %>, <%= weatherData.sys.country %></h2>
+                        <div class="coords">
+                            <p id="coordinates">Coordinates: <%= weatherData.coord.lon %>°, <%= weatherData.coord.lat %>°</p>
+                        </div>
+                        <img src="<%= 'http://openweathermap.org/img/w/' + weatherData.weather[0].icon + '.png' %>" alt="Weather Icon">
+                        <h2><%= Math.round(weatherData.main.temp) %>°C</h2>
+                        <p style="font-size: 0.9rem; color: #6c757d;">Feels Like: <%= Math.round(weatherData.main.feels_like) %>°C</p>
+                        <p>Description: <%= weatherData.weather[0].description %></p>
+                        <p>Humidity: <%= weatherData.main.humidity %>%</p>
+                        <p>Pressure: <%= weatherData.main.pressure %> hPa</p>
+                        <p>Wind Speed: <%= weatherData.wind.speed %> km/h</p>
+                        <p><%= weatherData.rain ? 'Rain Volume: ' + weatherData.rain['3h'] + ' mm' : 'No rain data' %></p>
+                    </div>
+                <% } %>
+            </form>
+        </div>
+        <div class="container map-container">
+            <div id="map">
+                <% if (typeof weatherData !== 'undefined') { %>
+                <script>
+                    var lat = <%= typeof weatherData !== 'undefined' ? weatherData.coord.lat : 0 %>;
+                    var lng = <%= typeof weatherData !== 'undefined' ? weatherData.coord.lon : 0 %>;
+                    function initMap() {
+                        var location = { lat: lat, lng: lng };
+                        const map = new google.maps.Map(document.getElementById('map'), {
+                            zoom: 10,
+                            center: location
+                        });
+                        const marker = new google.maps.Marker({
+                            position: location,
+                            map: map
+                        });
+                    }
+                </script>
+                <% } %>
+            </div>
+            <% if (typeof weatherData !== 'undefined') { %>
+            <h2>Latest News in <%= weatherData.name %></h2>
+            <div class="card">
+                <div class="card-body">
+                    <strong><%= newsData[0].title %></strong>
+                    <p><%= newsData[0].description %></p>
+                    <a href="<%= newsData[0].как url %>" target="_blank">Read more</a>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+    <footer class="footer">
+        <p>Toleugazy Daulet IT-2204</p>
+    </footer>
+</body>
+</html>
